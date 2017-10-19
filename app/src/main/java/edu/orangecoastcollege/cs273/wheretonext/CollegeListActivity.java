@@ -1,9 +1,16 @@
 package edu.orangecoastcollege.cs273.wheretonext;
 
+import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -14,6 +21,12 @@ public class CollegeListActivity extends AppCompatActivity {
     private CollegeListAdapter collegesListAdapter;
     private ListView collegesListView;
 
+    private EditText mNameEditText;
+    private EditText mPopulationEditText;
+    private EditText mTuitionEditText;
+    private RatingBar mRatingBar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,37 +36,59 @@ public class CollegeListActivity extends AppCompatActivity {
         db = new DBHelper(this);
 
         // TODO: Comment this section out once the colleges below have been added to the database,
-
+        for(College c : collegesList)
+        {
+            if(!collegesList.contains(c)) {
+                collegesList.add(c);
+                db.addCollege(c);
+            }
+        }
 
         // TODO: so they are not added multiple times (prevent duplicate entries)
+        /*
         db.addCollege(new College("UC Berkeley", 42082, 14068, 4.7, "ucb.png"));
         db.addCollege(new College("UC Irvine", 31551, 15026.47, 4.3, "uci.png"));
         db.addCollege(new College("UC Los Angeles", 43301, 25308, 4.5, "ucla.png"));
         db.addCollege(new College("UC San Diego", 33735, 20212, 4.4, "ucsd.png"));
         db.addCollege(new College("CSU Fullerton", 38948, 6437, 4.5, "csuf.png"));
         db.addCollege(new College("CSU Long Beach", 37430, 6452, 4.4, "csulb.png"));
+        */
 
         // TODO:  Fill the collegesList with all Colleges from the database
 
 
-        // TODO:  Connect the list adapter with the list
+        // COMPLETED:  Connect the list adapter with the list
+        collegesListAdapter = new CollegeListAdapter(this, R.layout.college_list_item, collegesList);
 
-
-        // TODO:  Set the list view to use the list adapter
+        // COMPLETED:  Set the list view to use the list adapter
+        collegesListView.setAdapter(collegesListAdapter);
     }
 
     public void viewCollegeDetails(View view) {
 
-        // TODO: Implement the view college details using an Intent
-
-
+        // COMPLETED: Implement the view college details using an Intent
+        Intent detailsIntent = new Intent(this, CollegeDetailsActivity.class);
+        startActivity(detailsIntent);
     }
 
     public void addCollege(View view) {
 
         // TODO: Implement the code for when the user clicks on the addCollegeButton
+        String name = mNameEditText.getText().toString();
+        String population = mPopulationEditText.getText().toString();
+        String tuition = mTuitionEditText.getText().toString();
+        if(TextUtils.isEmpty(name) || TextUtils.isEmpty(population) || TextUtils.isEmpty(tuition))
+            Toast.makeText(this, "You cannot leave any fields empty", Toast.LENGTH_SHORT).show();
+        else {
+            College newCollege = new College(name, population, tuition, 0.0f,);
+            db.addCollege(newCollege);
+            mNameEditText.setText("");
+            mPopulationEditText.setText("");
+            mTuitionEditText.setText("");
 
-
+            // Notify the adapter
+            collegesList.add(newCollege);
+            collegesListAdapter.notifyDataSetChanged();
+        }
     }
-
 }

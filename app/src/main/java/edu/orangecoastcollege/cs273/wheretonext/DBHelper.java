@@ -60,7 +60,7 @@ class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        // TODO:  Write code to add a College to the database
+        // COMPLETED:  Write code to add a College to the database
         values.put(FIELD_NAME, college.getName());
         values.put(FIELD_POPULATION, college.getPopulation());
         values.put(FIELD_TUITION, college.getTuition());
