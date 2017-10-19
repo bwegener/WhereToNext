@@ -12,6 +12,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CollegeListActivity extends AppCompatActivity {
@@ -32,18 +33,17 @@ public class CollegeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_college_list);
 
+        // Connecting views to member variables
+        collegesListView = (ListView) findViewById(R.id.collegeListView);
+        mNameEditText = (EditText) findViewById(R.id.nameEditText);
+        mPopulationEditText = (EditText) findViewById(R.id.populationEditText);
+        mTuitionEditText = (EditText) findViewById(R.id.tuitionEditText);
+        mRatingBar = (RatingBar) findViewById(R.id.collegeRatingBar);
+
         //this.deleteDatabase(DBHelper.DATABASE_NAME);
         db = new DBHelper(this);
 
         // TODO: Comment this section out once the colleges below have been added to the database,
-        for(College c : collegesList)
-        {
-            if(!collegesList.contains(c)) {
-                collegesList.add(c);
-                db.addCollege(c);
-            }
-        }
-
         // TODO: so they are not added multiple times (prevent duplicate entries)
         /*
         db.addCollege(new College("UC Berkeley", 42082, 14068, 4.7, "ucb.png"));
@@ -55,7 +55,7 @@ public class CollegeListActivity extends AppCompatActivity {
         */
 
         // TODO:  Fill the collegesList with all Colleges from the database
-
+        collegesList = db.getAllColleges();
 
         // COMPLETED:  Connect the list adapter with the list
         collegesListAdapter = new CollegeListAdapter(this, R.layout.college_list_item, collegesList);
@@ -77,10 +77,13 @@ public class CollegeListActivity extends AppCompatActivity {
         String name = mNameEditText.getText().toString();
         String population = mPopulationEditText.getText().toString();
         String tuition = mTuitionEditText.getText().toString();
+        float rating = mRatingBar.getRating(); //Added rating to the list of variables being grabbed form UI
         if(TextUtils.isEmpty(name) || TextUtils.isEmpty(population) || TextUtils.isEmpty(tuition))
             Toast.makeText(this, "You cannot leave any fields empty", Toast.LENGTH_SHORT).show();
         else {
-            College newCollege = new College(name, population, tuition, 0.0f,);
+            int populationValue = Integer.parseInt(mPopulationEditText.getText().toString());//Grab actual values after check for empty
+            double tuitionValue = Double.parseDouble(mTuitionEditText.getText().toString());
+            College newCollege = new College(name, populationValue, tuitionValue, rating); //Fix constructor
             db.addCollege(newCollege);
             mNameEditText.setText("");
             mPopulationEditText.setText("");
