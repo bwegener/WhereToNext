@@ -42,6 +42,7 @@ public class CollegeListActivity extends AppCompatActivity {
         mRatingBar = (RatingBar) findViewById(R.id.collegeRatingBar);
 
         // TODO: Comment this section out once the colleges below have been added to the database,
+        /*
         for(College c : collegesList)
         {
             if(!collegesList.contains(c)) {
@@ -49,6 +50,7 @@ public class CollegeListActivity extends AppCompatActivity {
                 db.addCollege(c);
             }
         }
+        */
 
         // TODO: so they are not added multiple times (prevent duplicate entries)
         /*
@@ -74,8 +76,19 @@ public class CollegeListActivity extends AppCompatActivity {
 
         // COMPLETED: Implement the view college details using an Intent
         Intent detailsIntent = new Intent(this, CollegeDetailsActivity.class);
+
+
+        College selectedCollege = collegesList.get();
+
+        detailsIntent.putExtra("Name", selectedCollege.getName());
+        detailsIntent.putExtra("Population", selectedCollege.getPopulation());
+        detailsIntent.putExtra("Tuition", selectedCollege.getTuition());
+        detailsIntent.putExtra("Rating", selectedCollege.getRating());
+        detailsIntent.putExtra("ImageName", selectedCollege.getImageName());
+
         startActivity(detailsIntent);
     }
+
 
     public void addCollege(View view) {
 
