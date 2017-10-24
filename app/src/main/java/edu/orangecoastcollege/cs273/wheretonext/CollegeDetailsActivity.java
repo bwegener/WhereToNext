@@ -14,6 +14,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.NumberFormat;
 
+/**
+ * The <code>CollegeDetailsActivity</code> shows the details of a college
+ * including the image of the college, name, population, tuition, and rating.
+ *
+ * @author Brian Wegener
+ * @version 1.0
+ *
+ * Created on 10/23/2017
+ */
 public class CollegeDetailsActivity extends AppCompatActivity {
 
     @Override

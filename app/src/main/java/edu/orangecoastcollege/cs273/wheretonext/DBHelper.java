@@ -8,6 +8,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
+/**
+ * The <code>DBHelper</code> sets up the database
+ * by adding to it, removing from it, upgrading, and
+ * creating the database.
+ *
+ * @author Brian Wegener
+ * @version 1.0
+ *
+ * Created on 10/23/2017
+ */
 class DBHelper extends SQLiteOpenHelper {
 
     //TASK 1: DEFINE THE DATABASE VERSION, NAME AND TABLE NAME
@@ -25,10 +35,19 @@ class DBHelper extends SQLiteOpenHelper {
     private static final String FIELD_IMAGE_NAME = "image_name";
 
 
+    /**
+     * This creates the context for the database, with its name and version.
+     * @param context
+     */
     public DBHelper(Context context){
         super (context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * The onCreate makes the database by creating the table with the different
+     * fields.
+     * @param database
+     */
     @Override
     public void onCreate (SQLiteDatabase database){
 
@@ -41,9 +60,15 @@ class DBHelper extends SQLiteOpenHelper {
                 FIELD_RATING + " REAL, " +
                 FIELD_IMAGE_NAME + " TEXT" + ")";
         database.execSQL(table);
-
     }
 
+    /**
+     * This at first drops the table if it exists
+     * and then sets up the onCreate.
+     * @param database
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     public void onUpgrade(SQLiteDatabase database,
                           int oldVersion,
@@ -55,6 +80,11 @@ class DBHelper extends SQLiteOpenHelper {
         onCreate(database);
     }
 
+    /**
+     * This adds a college to the database with its fields
+     * and sets the id.
+     * @param college
+     */
     //********** DATABASE OPERATIONS:  ADD, GETALL
     public void addCollege(College college) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -70,14 +100,17 @@ class DBHelper extends SQLiteOpenHelper {
         long id = db.insert(DATABASE_TABLE, null, values);
         college.setId(id);
         db.close();
-
     }
 
+    /**
+     * This gets all the colleges from the database.
+     * @return the list of all colleges.
+     */
     public ArrayList<College> getAllColleges() {
         ArrayList<College> collegeList = new ArrayList<>();
         SQLiteDatabase database = this.getReadableDatabase();
 
-        // TODO:  Write the code to get all the colleges from the database.
+        // COMPLETED:  Write the code to get all the colleges from the database.
         Cursor cursor = database.query(
                 DATABASE_TABLE, new String[]{KEY_FIELD_ID, FIELD_NAME, FIELD_POPULATION,
                 FIELD_TUITION, FIELD_RATING, FIELD_IMAGE_NAME},
@@ -97,6 +130,9 @@ class DBHelper extends SQLiteOpenHelper {
         return collegeList;
     }
 
+    /**
+     * This deletes all the colleges.
+     */
     public void deleteAllColleges()
     {
         SQLiteDatabase db = getWritableDatabase();
